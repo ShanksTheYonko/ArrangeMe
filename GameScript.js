@@ -25,6 +25,20 @@ function GameBoard(rows, cols){
 		return this.cells[index];
 	};
 
+	this.isLegalMove = function(index)
+	{
+		var current = getLocationTuple(index);
+		var newLoc = getLocationTuple(empty);
+		var sameCol = Math.abs(current[0] - newLoc[0]) == 1 && current[1] == newLoc[1];
+		var sameRow = Math.abs(current[1] - newLoc[1]) == 1 && current[0] == newLoc[0];
+		return sameRow || sameCol;
+	};
+
+	var getLocationTuple = function(index){
+		tempIndex = index - 1;
+		return [Math.floor(tempIndex / cols), tempIndex % cols];
+	};
+
 	this.check = function(){
 		for (cell in this.cells){
 			if (cell != this.cells[cell]){
@@ -96,12 +110,14 @@ function Game(config){
 
 	var movePuzzlePart = function(elem){
 		var id = elem.currentTarget.id
-		var newLocation = board.movePuzzlePart(id);
-		oldID = id;
-		newID = newLocation;
-		var temp = document.getElementById(oldID).src;
-		document.getElementById(oldID).src = "";
-		document.getElementById(newID).src = temp;
+		if (board.isLegalMove(id)){
+			var newLocation = board.movePuzzlePart(id);
+			oldID = id;
+			newID = newLocation;
+			var temp = document.getElementById(oldID).src;
+			document.getElementById(oldID).src = "";
+			document.getElementById(newID).src = temp;
+		}
 	};
 	
 	this.initilize = function(objName){
