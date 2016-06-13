@@ -140,6 +140,7 @@ function startGame(){
 	config = new GameConfig("3x3", 400, 400);
 	game = new Game(config);
 	game.initilize();
+	document.getElementById("startButton").disabled = true;
 };
 
 
