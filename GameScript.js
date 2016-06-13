@@ -6,10 +6,9 @@ function GameBoard(rows, cols){
 
 
 	this.initCells = function(){
-		for (var i = 1; i <= cellsNumber - 1; i++){
+		for (var i = 1; i <= cellsNumber; i++){
 			this[i] = i;
 		}
-		this[cellsNumber] = -1;
 	};
 	this.movePuzzlePart = function(index){
 		if (empty != index){
@@ -112,15 +111,10 @@ function Game(config){
 		var cells = rows * cols;
 		for (var puzzlePart = 1; puzzlePart <= cells; puzzlePart++){
 			var imgIndex = board.getPuzzlePartAt(puzzlePart);
-			if (imgIndex != -1){
-				document.getElementById(imgIndex).src = config.getPathOf(imgIndex);
-				document.getElementById(imgIndex).addEventListener( 'click', movePuzzlePart, false);
-			}
+			document.getElementById(imgIndex).src = config.getPathOf(imgIndex);
+			document.getElementById(imgIndex).addEventListener('click', movePuzzlePart, false);
 		}
-		
 	};
-
-	
 };
 
 
