@@ -95,13 +95,14 @@ function Game(config){
 		}
 	};
 
-	var movePuzzlePart = function(index){
-		oldID = "img" + index
-		newID = "img" + index
-		var newLocation = board.movePuzzlePart(index);
+	var movePuzzlePart = function(elem){
+		var id = elem.currentTarget.id
+		var newLocation = board.movePuzzlePart(id);
+		oldID = id;
+		newID = newLocation;
 		var temp = document.getElementById(oldID).src;
 		document.getElementById(oldID).src = "";
-		document.getElementById(newID) = temp;
+		document.getElementById(newID).src = temp;
 	};
 	
 	this.initilize = function(objName){
@@ -112,17 +113,19 @@ function Game(config){
 		for (var puzzlePart = 1; puzzlePart <= cells; puzzlePart++){
 			var imgIndex = board.getPuzzlePartAt(puzzlePart);
 			if (imgIndex != -1){
-				var id = "img" + imgIndex;
-				document.getElementById(id).src = config.getPathOf(imgIndex);
-				document.getElementById(id).addEventListener( 'click', function(){movePuzzlePart(puzzlePart)}, false);
+				document.getElementById(imgIndex).src = config.getPathOf(imgIndex);
+				document.getElementById(imgIndex).addEventListener( 'click', movePuzzlePart, false);
 			}
 		}
+		
 	};
 
 	
 };
 
 
-
-var config = new GameConfig("3x3", 400, 400);
-var game = new Game(config);
+function startGame(){
+	var config = new GameConfig("3x3", 400, 400);
+	var game = new Game(config);
+	game.initilize();
+};
