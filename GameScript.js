@@ -99,16 +99,15 @@ function GameConfig(version, tableHeight, tableWidth){
 function Game(config){
 	var config = config;
 	var board = new GameBoard(config.getRows(), config.getCols());
-	this.check = function(){
-		var result = board.check();
-		if (result){
-			alert("Win");
-		} else {
-			alert("Lose");
-		}
-	};
+	
 
 	var movePuzzlePart = function(elem){
+		var check = function(){
+			var result = board.check();
+			if (result){
+				alert("Win");
+			}
+		};
 		var id = elem.currentTarget.id
 		if (board.isLegalMove(id)){
 			var newLocation = board.movePuzzlePart(id);
@@ -118,6 +117,7 @@ function Game(config){
 			document.getElementById(oldID).src = "";
 			document.getElementById(newID).src = temp;
 		}
+		check();
 	};
 	
 	this.initilize = function(objName){
@@ -144,9 +144,7 @@ function startGame(){
 };
 
 
-function checkGame(){
-	game.check();
-}
+
 
 var config = 0;
 var game = 0;
