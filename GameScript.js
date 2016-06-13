@@ -118,8 +118,18 @@ function Game(config){
 };
 
 
+
+
 function startGame(){
-	var config = new GameConfig("3x3", 400, 400);
-	var game = new Game(config);
+	config = new GameConfig("3x3", 400, 400);
+	game = new Game(config);
 	game.initilize();
 };
+
+
+function checkGame(){
+	game.check();
+}
+
+var config = 0;
+var game = 0;
