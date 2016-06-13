@@ -125,10 +125,27 @@ function Game(config){
 		var rows = config.getRows();
 		var cols = config.getCols();
 		var cells = rows * cols;
-		for (var puzzlePart = 1; puzzlePart <= cells; puzzlePart++){
-			var imgIndex = board.getPuzzlePartAt(puzzlePart);
-			document.getElementById(imgIndex).src = config.getPathOf(imgIndex);
-			document.getElementById(imgIndex).addEventListener('click', movePuzzlePart, false);
+		var puzzlePart = 1;
+		for (var rowIndex = 1; rowIndex <= rows; rowIndex++){
+			tableID = "Puzzle";
+			var table = document.createElement("TABLE");
+			table.setAttribute("id", tableID);
+			document.body.appendChild(table);
+			var row = document.createElement("TR");
+			row.setAttribute("id", "row" + rowIndex);
+			document.getElementById(tableID).appendChild(row);
+			for (var colIndex = 1 ; colIndex <= cols; colIndex++){
+				var imgIndex = board.getPuzzlePartAt(puzzlePart);
+				var col = document.createElement("TD");
+				var img = document.createElement("IMG");
+				col.setAttribute("id","col"+colIndex)
+				img.setAttribute("id", puzzlePart);
+				img.setAttribute("src",config.getPathOf(imgIndex));
+				img.addEventListener('click', movePuzzlePart, false);
+				col.appendChild(img);
+				row.appendChild(col);
+				puzzlePart++;
+			}
 		}
 	};
 };
@@ -140,7 +157,6 @@ function startGame(){
 	config = new GameConfig("3x3", 400, 400);
 	game = new Game(config);
 	game.initilize();
-	document.getElementById("startButton").disabled = true;
 };
 
 
