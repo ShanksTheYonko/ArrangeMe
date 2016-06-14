@@ -1,56 +1,90 @@
 function GameBoard(rows, cols){
 	var cellsNumber = rows * cols;
-	var rows = rows;
-	var cols = cols;
+	var cells= [];
 	var empty = cellsNumber;
-
+	var RANDOM_LEVAL = 100;
 
 	this.initCells = function(){
 		for (var i = 1; i <= cellsNumber; i++){
-			this[i] = i;
+			cells[i] = i;
 		}
 	};
+
+	this.shuffle = function(){
+		var currIndex = 0;
+		while (currIndex < RANDOM_LEVAL){
+			var searching = true;
+			var randomNumber = -1;
+			while (searching) {
+				randomNumber = getRandomNumber(cellsNumber);
+				searching = !isLegal(randomNumber);
+				console.log("Random:" + randomNumber + "islegal: " + searching);
+			}
+			movePart(randomNumber);
+			currIndex++;
+		}
+		console.log(cells);
+	};
 	this.movePuzzlePart = function(index){
-		if (empty != index){
-			var temp = empty;
-			this.cells[empty] = this.cells[index];
-			this.cells[index] = -1;
+		return movePart(index);
+	};
+
+	var movePart = function(index){
+		if (empty != parseInt(index)){
+			console.log("Moving " + index + " to" + empty);
+			var temp = cells[empty];
+			cells[empty] = cells[index];
+			cells[index] = temp;
+			var indexTemp = empty;
 			empty = index;
-			return temp;
+			console.log(cells);
+			return indexTemp;
+		} else {
+			alert("Strange");
 		}
 		return index;
 	};
 
 	this.getPuzzlePartAt = function(index){
-		return this.cells[index];
+		return cells[index];
 	};
 
 	this.isLegalMove = function(index)
 	{
+		return isLegal(index);
+	};
+
+	var isLegal = function(index){
+		console.log(cells);
+		if (index == empty){
+			return false;
+		}
 		var current = getLocationTuple(index);
 		var newLoc = getLocationTuple(empty);
-		var sameCol = Math.abs(current[0] - newLoc[0]) == 1 && current[1] == newLoc[1];
-		var sameRow = Math.abs(current[1] - newLoc[1]) == 1 && current[0] == newLoc[0];
-		return sameRow || sameCol;
+		var rowDistance = Math.abs(current[0] - newLoc[0]);
+		var colDistance = Math.abs(current[1] - newLoc[1]);
+		return 1 == (rowDistance + colDistance);
 	};
 
 	var getLocationTuple = function(index){
-		tempIndex = index - 1;
+		var tempIndex = index - 1;
 		return [Math.floor(tempIndex / cols), tempIndex % cols];
 	};
 
 	this.check = function(){
-		for (cell in this.cells){
-			if (cell != this.cells[cell]){
-				if (cell != cellsNumber){
-					return false;
-				}
+		for (cell in cells){
+			if (cell != cells[cell]){
+				return false;
 			}
 		}
 		return true;
 	};
 
-	this.cells = new this.initCells();
+	var getRandomNumber = function(rangeMax){
+		return Math.floor((Math.random() * rangeMax) + 1);
+	};
+	this.initCells();
+	this.shuffle();
 };
 
 
@@ -93,6 +127,7 @@ function GameConfig(version, tableHeight, tableWidth){
 		return baseFolder + index + fileType;
 	};
 	this.initConfig();
+	
 }
 
 
@@ -108,20 +143,19 @@ function Game(config){
 				alert("Win");
 			}
 		};
-		var id = elem.currentTarget.id
+		var id = parseInt(elem.currentTarget.id);
 		if (board.isLegalMove(id)){
 			var newLocation = board.movePuzzlePart(id);
-			oldID = id;
-			newID = newLocation;
+			var oldID = id;
+			var newID = newLocation;
 			var temp = document.getElementById(oldID).src;
-			document.getElementById(oldID).src = "";
+			document.getElementById(oldID).src = "3x3/9.png"; // TODO :change this
 			document.getElementById(newID).src = temp;
 		}
 		check();
 	};
 	
 	this.initilize = function(objName){
-		board.initCells();
 		var rows = config.getRows();
 		var cols = config.getCols();
 		var cells = rows * cols;
