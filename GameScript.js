@@ -160,22 +160,23 @@ function Game(config){
 		var cols = config.getCols();
 		var cells = rows * cols;
 		var puzzlePart = 1;
-		for (var rowIndex = 1; rowIndex <= rows; rowIndex++){
-			tableID = "Puzzle";
+		tableID = "Puzzle";
 			var table = document.createElement("TABLE");
-			table.setAttribute("id", tableID);
+			table.id = tableID;
+		for (var rowIndex = 1; rowIndex <= rows; rowIndex++){
 			document.body.appendChild(table);
 			var row = document.createElement("TR");
-			row.setAttribute("id", "row" + rowIndex);
+			row.id = "row" + rowIndex;
 			document.getElementById(tableID).appendChild(row);
 			for (var colIndex = 1 ; colIndex <= cols; colIndex++){
 				var imgIndex = board.getPuzzlePartAt(puzzlePart);
 				var col = document.createElement("TD");
 				var img = document.createElement("IMG");
-				col.setAttribute("id","col"+colIndex)
-				img.setAttribute("id", puzzlePart);
-				img.setAttribute("src",config.getPathOf(imgIndex));
-				img.addEventListener('click', movePuzzlePart, false);
+				col.setAttribute("id","col"+colIndex);
+				col.id = "cell"+ rowIndex + "," + colIndex;
+				img.id = puzzlePart;
+				img.src = config.getPathOf(imgIndex);
+				img.onclick = movePuzzlePart;
 				col.appendChild(img);
 				row.appendChild(col);
 				puzzlePart++;
