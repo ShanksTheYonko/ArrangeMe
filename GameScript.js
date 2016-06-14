@@ -11,6 +11,15 @@ function GameBoard(rows, cols){
 		empty = cellsNumber;
 	};
 
+
+	this.getRelative = function(vector){
+		var emptyVector= getLocationTuple(empty);
+		emptyVector[0] += vector[0]  ;
+		emptyVector[1] += vector[1]  + 1;
+
+		return cols * emptyVector[0] + emptyVector[1];
+	};
+
 	this.shuffle = function(){
 		var currIndex = 0;
 		while (currIndex < RANDOM_LEVAL){
@@ -53,7 +62,7 @@ function GameBoard(rows, cols){
 	};
 
 	var isLegal = function(index){
-		if (index == empty){
+		if (index == empty || index < 0 || index > cellsNumber){
 			return false;
 		}
 		var current = getLocationTuple(index);
@@ -123,13 +132,18 @@ function Game(config){
 	var tableID = "Puzzle";
 
 	var movePuzzlePart = function(elem){
+		var oldID = parseInt(elem.currentTarget.id);
+		moveByID(oldID);
+	};
+
+
+	var moveByID = function(oldID){
 		var check = function(){
 			var result = board.check();
 			if (result){
 				alert("Win");
 			}
 		};
-		var oldID = parseInt(elem.currentTarget.id);
 		if (board.isLegalMove(oldID)){
 			var newID = board.movePuzzlePart(oldID);
 			var oldCell = document.getElementById(oldID);
@@ -144,6 +158,11 @@ function Game(config){
 		document.body.removeChild(document.getElementById(tableID));
 		board.initCells();
 	}
+
+	this.handleKey = function(vector){
+		var relative = board.getRelative(vector);
+		moveByID(relative);
+	};
 
 	this.initilize = function(){
 		var rows = config.getRows();
@@ -185,6 +204,7 @@ function startGame(){
 	config = new GameConfig(3,3, window.innerHeight , window.innerWidth);
 	game = new Game(config);
 	game.initilize();
+	document.onkeydown = checkKey;
 };
 
 
@@ -193,7 +213,23 @@ function resetGame(){
 	game.initilize();
 }
 
+function checkKey(){
+	var e = e || window.event;
+	var keyCode = e.keyCode;
+	var vector = keyToDistanceVector(keyCode);
+	if (keyCode != undefined){
+		game.handleKey(vector);
+	}
+};
 
+function keyToDistanceVector(asciiValue){
+	var vectors = {};
+	vectors[38] = [1, 0]; // Up Key
+	vectors[40] = [-1, 0]; // Down Key
+	vectors[37] = [0, 1]; // Left Key
+	vectors[39] = [0, -1]; // Right Key
+	return vectors[asciiValue];
+};
 
 var config = 0;
 var game = 0;
