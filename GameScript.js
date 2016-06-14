@@ -18,12 +18,10 @@ function GameBoard(rows, cols){
 			while (searching) {
 				randomNumber = getRandomNumber(cellsNumber);
 				searching = !isLegal(randomNumber);
-				console.log("Random:" + randomNumber + "islegal: " + searching);
 			}
 			movePart(randomNumber);
 			currIndex++;
 		}
-		console.log(cells);
 	};
 	this.movePuzzlePart = function(index){
 		return movePart(index);
@@ -37,7 +35,6 @@ function GameBoard(rows, cols){
 			cells[index] = temp;
 			var indexTemp = empty;
 			empty = index;
-			console.log(cells);
 			return indexTemp;
 		} else {
 			alert("Strange");
@@ -55,7 +52,6 @@ function GameBoard(rows, cols){
 	};
 
 	var isLegal = function(index){
-		console.log(cells);
 		if (index == empty){
 			return false;
 		}
@@ -143,14 +139,13 @@ function Game(config){
 				alert("Win");
 			}
 		};
-		var id = parseInt(elem.currentTarget.id);
-		if (board.isLegalMove(id)){
-			var newLocation = board.movePuzzlePart(id);
-			var oldID = id;
-			var newID = newLocation;
-			var temp = document.getElementById(oldID).src;
-			document.getElementById(oldID).src = "3x3/9.png"; // TODO :change this
-			document.getElementById(newID).src = temp;
+		var oldID = parseInt(elem.currentTarget.id);
+		if (board.isLegalMove(oldID)){
+			var newID = board.movePuzzlePart(oldID);
+			var oldCell = document.getElementById(oldID);
+			var tempHtml = oldCell.innerHTML;
+			document.getElementById(oldID).innerHTML = document.getElementById(newID).innerHTML;
+			document.getElementById(newID).innerHTML = tempHtml;
 		}
 		check();
 	};
@@ -161,23 +156,24 @@ function Game(config){
 		var cells = rows * cols;
 		var puzzlePart = 1;
 		tableID = "Puzzle";
-			var table = document.createElement("TABLE");
-			table.id = tableID;
+		var table = document.createElement("table");
+		table.id = tableID;
+		table.border = 1;
 		for (var rowIndex = 1; rowIndex <= rows; rowIndex++){
 			document.body.appendChild(table);
-			var row = document.createElement("TR");
+			var row = document.createElement("tr");
 			row.id = "row" + rowIndex;
 			document.getElementById(tableID).appendChild(row);
 			for (var colIndex = 1 ; colIndex <= cols; colIndex++){
 				var imgIndex = board.getPuzzlePartAt(puzzlePart);
-				var col = document.createElement("TD");
-				var img = document.createElement("IMG");
-				col.setAttribute("id","col"+colIndex);
-				col.id = "cell"+ rowIndex + "," + colIndex;
-				img.id = puzzlePart;
-				img.src = config.getPathOf(imgIndex);
-				img.onclick = movePuzzlePart;
-				col.appendChild(img);
+				var col = document.createElement("td");
+				var currentCell = document.createElement("p");
+				col.id = puzzlePart;
+				if (imgIndex != cells){
+					currentCell.innerHTML = imgIndex;
+				}
+				col.onclick = movePuzzlePart;
+				col.appendChild(currentCell);
 				row.appendChild(col);
 				puzzlePart++;
 			}
