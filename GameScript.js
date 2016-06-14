@@ -156,13 +156,16 @@ function Game(config){
 		document.body.appendChild(table);
 		for (var rowIndex = 1; rowIndex <= rows; rowIndex++){
 			var row = document.createElement("tr");
+			row.height = config.getCellHeight();
 			row.id = "row" + rowIndex;
 			document.getElementById(tableID).appendChild(row);
 			for (var colIndex = 1 ; colIndex <= cols; colIndex++){
 				var imgIndex = board.getPuzzlePartAt(puzzlePart);
 				var col = document.createElement("td");
 				var currentCell = document.createElement("p");
+				col.width = config.getCellWidth();
 				col.id = puzzlePart;
+				col.align = "center";
 				if (imgIndex != cells){
 					currentCell.innerHTML = imgIndex;
 				}
@@ -179,7 +182,7 @@ function Game(config){
 
 
 function startGame(){
-	config = new GameConfig(3,3, window.innerHeight / 2, window.innerWidth / 2);
+	config = new GameConfig(3,3, window.innerHeight , window.innerWidth);
 	game = new Game(config);
 	game.initilize();
 };
