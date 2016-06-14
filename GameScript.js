@@ -8,6 +8,7 @@ function GameBoard(rows, cols){
 		for (var i = 1; i <= cellsNumber; i++){
 			cells[i] = i;
 		}
+		empty = cellsNumber;
 	};
 
 	this.shuffle = function(){
@@ -84,41 +85,30 @@ function GameBoard(rows, cols){
 };
 
 
-function GameConfig(version, tableHeight, tableWidth){
-	this.version = version;
+function GameConfig(rows, cols, tableHeight, tableWidth){
 	var fileType = "";
 	var baseFolder = "";
 	var tableHeight = tableHeight;
 	var tableWidth = tableWidth;
-	var imgHeight = 0;
-	var imgWidth = 0;
-	var rows = 0;
-	var cols = 0;
+	var cellHeight = 0;
+	var cellWidth = 0;
 	this.initConfig = function(){
-		sizes = {"3x3" : 3};
-		size = sizes[version];
-		imgHeight = tableHeight / size;
-		imgWidth = tableWidth / size;
-		baseFolder = version + "/";
+		imgHeight = tableHeight / rows;
+		imgWidth = tableWidth / cols;
 		fileType = ".png";
-		rows = size;
-		cols = size;
 	}
-	this.getImgHeight = function(){
+	this.getCellHeight = function(){
 		return imgHeight;
 	};
-	this.getImgWidth = function(){
+	this.getCellWidth = function(){
 		return imgWidth;
-	};
-	this.getBaseFolder = function(){
-		return baseFolder;
 	};
 	this.getRows = function(){
 		return rows;
-	}
+	};
 	this.getCols = function(){
 		return cols;
-	}
+	};
 	this.getPathOf = function(index){
 		return baseFolder + index + fileType;
 	};
@@ -130,7 +120,7 @@ function GameConfig(version, tableHeight, tableWidth){
 function Game(config){
 	var config = config;
 	var board = new GameBoard(config.getRows(), config.getCols());
-	
+	var tableID = "Puzzle";
 
 	var movePuzzlePart = function(elem){
 		var check = function(){
@@ -150,17 +140,21 @@ function Game(config){
 		check();
 	};
 	
-	this.initilize = function(objName){
+	this.resetGame = function(){
+		document.body.removeChild(document.getElementById(tableID));
+		board.initCells();
+	}
+
+	this.initilize = function(){
 		var rows = config.getRows();
 		var cols = config.getCols();
 		var cells = rows * cols;
 		var puzzlePart = 1;
-		tableID = "Puzzle";
 		var table = document.createElement("table");
 		table.id = tableID;
 		table.border = 1;
+		document.body.appendChild(table);
 		for (var rowIndex = 1; rowIndex <= rows; rowIndex++){
-			document.body.appendChild(table);
 			var row = document.createElement("tr");
 			row.id = "row" + rowIndex;
 			document.getElementById(tableID).appendChild(row);
@@ -185,11 +179,16 @@ function Game(config){
 
 
 function startGame(){
-	config = new GameConfig("3x3", 400, 400);
+	config = new GameConfig(3,3, window.innerHeight / 2, window.innerWidth / 2);
 	game = new Game(config);
 	game.initilize();
 };
 
+
+function resetGame(){
+	game.resetGame();
+	game.initilize();
+}
 
 
 
